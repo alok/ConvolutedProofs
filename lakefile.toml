@@ -1,6 +1,6 @@
 name = "ConvolutedProofs"
 version = "0.1.0"
-keywords = ["math", "proof", "lean4", "formalization", "ultrafilters", "dirichlet", "carleson"]
+keywords = ["math", "proof", "lean4", "formalization", "ultrafilters", "dirichlet"]
 defaultTargets = ["ConvolutedProofs"]
 authors = ["Alok Singh"]
 license = "Apache-2.0"
