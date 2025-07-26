@@ -2,13 +2,21 @@
   "mcpServers": {
     "lean-lsp-mcp": {
       "command": "uvx",
-      "args": ["lean-lsp-mcp"],
-      "env": {}
+      "args": [
+        "lean-lsp-mcp"
+      ]
     },
     "leanexplore": {
       "command": "uvx",
-      "args": ["--from", "lean-explore", "leanexplore", "mcp", "serve", "--backend", "local"],
-      "env": {}
+      "args": [
+        "--from",
+        "lean-explore",
+        "leanexplore",
+        "mcp",
+        "serve",
+        "--backend",
+        "local"
+      ]
     }
   }
 }

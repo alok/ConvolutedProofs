@@ -83,6 +83,7 @@ Search and exploration tool for Lean mathematics:
 
 ### Import and Module Structure
 - Imports MUST come before any syntax elements, including module and doc comments
+- You can use `import Mathlib` as a universal import (like Python's star import) to get all of Mathlib
 - Set `linter.missingDocs = true` and `relaxedAutoImplicit = false` in `lakefile.lean`
 
 ### Building and Testing
