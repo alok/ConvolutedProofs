@@ -1,0 +1,93 @@
+{
+  "name": "lean-tools",
+  "description": "MCP tools for Lean 4 theorem proving",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "lean_goal",
+      "description": "Get the proof goals (proof state) at a specific location in a Lean file",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_path": {"type": "string", "description": "Absolute path to Lean file"},
+          "line": {"type": "integer", "description": "Line number (1-indexed)"},
+          "column": {"type": "integer", "description": "Column number (1-indexed, optional)"}
+        },
+        "required": ["file_path", "line"]
+      }
+    },
+    {
+      "name": "lean_diagnostic_messages",
+      "description": "Get all diagnostic messages (errors, warnings, infos) for a Lean file",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_path": {"type": "string", "description": "Absolute path to Lean file"}
+        },
+        "required": ["file_path"]
+      }
+    },
+    {
+      "name": "lean_hover_info",
+      "description": "Get hover info (docs for syntax, variables, functions) at a specific location",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_path": {"type": "string", "description": "Absolute path to Lean file"},
+          "line": {"type": "integer", "description": "Line number (1-indexed)"},
+          "column": {"type": "integer", "description": "Column number (1-indexed)"}
+        },
+        "required": ["file_path", "line", "column"]
+      }
+    },
+    {
+      "name": "lean_leansearch",
+      "description": "Search for Lean theorems using natural language",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": {"type": "string", "description": "Search query"},
+          "num_results": {"type": "integer", "description": "Max results (default 5)"}
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "lean_loogle",
+      "description": "Search for definitions and theorems using loogle",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "query": {"type": "string", "description": "Search query"},
+          "num_results": {"type": "integer", "description": "Max results (default 8)"}
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "lean_state_search",
+      "description": "Search for theorems based on proof state",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_path": {"type": "string", "description": "Absolute path to Lean file"},
+          "line": {"type": "integer", "description": "Line number (1-indexed)"},
+          "column": {"type": "integer", "description": "Column number (1-indexed)"},
+          "num_results": {"type": "integer", "description": "Max results (default 5)"}
+        },
+        "required": ["file_path", "line", "column"]
+      }
+    },
+    {
+      "name": "lean_list_sorries",
+      "description": "List all sorry placeholders in a Lean file",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_path": {"type": "string", "description": "Absolute path to Lean file"}
+        },
+        "required": ["file_path"]
+      }
+    }
+  ]
+}
