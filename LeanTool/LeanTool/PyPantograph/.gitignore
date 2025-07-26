@@ -1,0 +1,11 @@
+.*
+!.gitignore
+!.github
+
+# Python
+*.py[cod]
+*.egg-info
+
+# Output
+/dist
+/venv
