@@ -1,8 +1,13 @@
 {
   "mcpServers": {
-    "lean-tools": {
-      "command": "node",
-      "args": ["/Users/alokbeniwal/SqrtDirichlet/.mcp/server.js"],
+    "lean-lsp-mcp": {
+      "command": "uvx",
+      "args": ["lean-lsp-mcp"],
+      "env": {}
+    },
+    "leanexplore": {
+      "command": "uvx",
+      "args": ["--from", "lean-explore", "leanexplore", "mcp", "serve", "--backend", "local"],
       "env": {}
     }
   }
