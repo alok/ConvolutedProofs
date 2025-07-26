@@ -59,94 +59,50 @@ theorem irrational_sqrt_2 : Irrational √2 := by
       rw [this] at h
       norm_num at h
 
-  -- Build an ultrafilter on P
-  -- Since P is infinite, we can find a free ultrafilter
-  have P_nonempty : P.Nonempty := by
-    -- 3 itself is in P
-    use 3
-    constructor
-    · exact Nat.prime_three
-    · norm_num
-
-  -- Construct a non-principal ultrafilter on P
-  -- Since P is infinite, we can use the hyperfilter on the subtype
-
-  -- Work with the subtype ↑P
-  haveI : Infinite ↑P := Set.Infinite.to_subtype P_infinite
-
-  -- Use the hyperfilter (ultrafilter extending cofinite) on ↑P
+  -- Build a non-principal ultrafilter on P using the hyperfilter construction
+  -- The hyperfilter extends the cofinite filter and is non-principal on infinite types
+  haveI : Infinite ↑P := P_infinite.to_subtype
   let U : Ultrafilter ↑P := @Filter.hyperfilter ↑P _
 
-  -- U is non-principal: no finite set is in U
-  have U_nonprincipal : ∀ s : Set ↑P, s.Finite → s ∉ U := by
-    intro s hs
-    exact Filter.notMem_hyperfilter_of_finite hs
+  -- U is non-principal since it contains the cofinite filter
+  have U_nonprincipal : ∀ p : ↑P, U ≠ pure p := by
+    intro p hU
+    -- If U = pure p, then {p} ∈ U, but finite sets aren't in the hyperfilter
+    have : {p} ∈ U := by rw [hU]; exact Filter.singleton_mem_pure
+    exact (Set.finite_singleton _).notMem_hyperfilter this
 
-  -- For each prime p in P, we have the finite field ZMod p
-  -- We need to set up the model theory properly
+  -- Model theory setup: ultraproduct of finite fields ZMod p for p ∈ P
+  -- Key insight: If √2 ∈ ℚ, then x² = 2 has a solution in every char 0 field
+  -- But by quadratic reciprocity, x² ≡ 2 (mod p) has no solution for p ≡ 3 (mod 8)
+  -- The ultraproduct would give a char 0 field with no solution to x² = 2 (contradiction)
 
-  -- The language of rings
-  let L := ring
+  -- Direct approach: use that P contains arbitrarily large primes
 
-  -- Family of structures
-  let M : ↑P → Type := fun p => ZMod p.val
+  -- First, note that 2 ∉ P since (2 : ZMod 8) = 2 ≠ 3
+  have two_not_in_P : 2 ∉ P := by decide
 
-  -- The ultraproduct construction
-  -- Let F be the ultraproduct of the finite fields ZMod p for p ∈ P
 
-  -- Since each ZMod p is a field (as p is prime), and we want to use model theory,
-  -- we'll construct the ultraproduct carefully
-
-  -- If √2 were rational, say √2 = a/b, then in any field containing ℚ,
-  -- we'd have an element x with x² = 2
-
-  -- But we'll show: for each p ∈ P, the equation x² ≡ 2 (mod p) has no solution
-  -- By Dirichlet and quadratic reciprocity, this holds for p ≡ 3 (mod 8)
-
-  -- Now comes the key contradiction:
-  -- 1. If √2 ∈ ℚ, then x² = 2 has a solution in every field extension of ℚ
-  -- 2. But the ultraproduct of fields ZMod p (for our primes p) would be a field
-  --    where x² = 2 has no solution (by Łoś's theorem)
-  -- 3. This ultraproduct has characteristic 0 (as only finitely many primes divide any n)
-  -- 4. Every field of characteristic 0 contains ℚ
-
-  -- The formal details would require:
-  -- - Setting up the first-order language of rings
-  -- - Showing the ultraproduct is a field
-  -- - Applying Łoś's theorem to transfer "x² ≠ 2 for all x"
-  -- - Showing the ultraproduct has characteristic 0
-
-  -- A simpler approach: use the fact that infinitely many primes ≡ 3 (mod 8)
-  -- means we can find arbitrary large primes with this property
-
-  -- For contradiction, assume √2 = a/b with a, b ∈ ℕ
-  obtain ⟨a, b, hpos, hcoprime, hrat⟩ : ∃ a b : ℕ, 0 < b ∧ a.Coprime b ∧ √2 = a / b := by
-    rw [Irrational] at h
-    push_neg at h
-    rw [mem_range] at h
-    obtain ⟨q, hq⟩ := h
-    use q.num.natAbs, q.den
-    constructor
-    · exact q.pos
-    constructor
-    · -- q is in lowest terms, so gcd(|q.num|, q.den) = 1
-      have := q.reduced
-      rw [Nat.Coprime]
-      convert this using 2
-    · -- Convert √2 = q to √2 = a/b
-      rw [← hq]
-      simp only [Rat.cast_def]
-      -- Need to show q.num / q.den = q.num.natAbs / q.den
-      -- Since √2 > 0, we have q > 0, so q.num > 0
-      have hq_pos : 0 < q := by
-        have : 0 < √2 := Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)
-        rw [← hq] at this
-        exact_mod_cast this
-      have hnum_pos : 0 < q.num := by
-        rw [Rat.num_pos]
-        exact hq_pos
-      congr
-      rw [Int.natAbs_of_nonneg (le_of_lt hnum_pos)]
+  -- For contradiction, assume √2 is rational
+  rw [Irrational] at h
+  push_neg at h
+  obtain ⟨q, hq : (q : ℝ) = √2⟩ := h
+  -- Get coprime representation √2 = a/b
+  have hq_pos : 0 < q := by
+    have : (0 : ℝ) < q := by
+      rw [hq]
+      exact Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)
+    exact_mod_cast this
+  let a := q.num.natAbs
+  let b := q.den
+  have hpos : 0 < b := q.pos
+  have hcoprime : a.Coprime b := by
+    rw [Nat.Coprime]
+    convert q.reduced using 2
+  have hrat : √2 = a / b := by
+    conv_lhs => rw [← hq]
+    simp only [Rat.cast_def, a, b]
+    congr
+    exact (Int.natAbs_of_nonneg (le_of_lt (Rat.num_pos.mpr hq_pos))).symm
 
   -- Then a² = 2b²
   have hsq : a^2 = 2 * b^2 := by
@@ -157,45 +113,24 @@ theorem irrational_sqrt_2 : Irrational √2 := by
     field_simp [hpos.ne'] at this
     norm_cast at this
 
-  -- Pick a prime p ∈ P with p > max(a, b, 8)
-  -- Such a prime exists because P is infinite
-  have : ∃ p ∈ P, max (max a b) 8 < p := by
-    -- Use that P is infinite
+  -- Pick a prime p ∈ P with p > max(a, b)
+  -- Such exists since P is infinite
+  obtain ⟨p, hp, hbig⟩ : ∃ p ∈ P, max a b < p := by
     by_contra h
     push_neg at h
-    have : P ⊆ {p : ℕ | p ≤ max (max a b) 8} := by
-      intro p hp
-      exact h p hp
-    have : P.Finite := by
-      apply Set.Finite.subset
-      · exact Set.finite_Iic (max (max a b) 8)
-      · exact this
-    exact P_infinite this
-
-  obtain ⟨p, hp, hbig⟩ := this
+    have : P ⊆ {p : ℕ | p ≤ max a b} := fun p hp => h p hp
+    exact P_infinite (Set.Finite.subset (Set.finite_Iic _) this)
 
   -- p doesn't divide a or b (since p > max(a,b) and a,b > 0)
   have hpa : ¬ p ∣ a := by
     intro hdiv
     have hpos_a : 0 < a := by
-      by_contra h0
-      simp at h0
-      rw [h0] at hsq
-      simp at hsq
-      have : 0 < b := hpos
-      linarith
-    have : p ≤ a := Nat.le_of_dvd hpos_a hdiv
-    have : max (max a b) 8 < p := hbig
-    have : a ≤ max a b := le_max_left _ _
-    have : max a b ≤ max (max a b) 8 := le_max_left _ _
-    linarith
+      by_contra h0; simp at h0
+      rw [h0] at hsq; simp at hsq; linarith [hpos]
+    exact absurd (Nat.le_of_dvd hpos_a hdiv) (not_le.mpr ((le_max_left a b).trans_lt hbig))
   have hpb : ¬ p ∣ b := by
     intro hdiv
-    have : p ≤ b := Nat.le_of_dvd hpos hdiv
-    have : max (max a b) 8 < p := hbig
-    have : b ≤ max a b := le_max_right _ _
-    have : max a b ≤ max (max a b) 8 := le_max_left _ _
-    linarith
+    exact absurd (Nat.le_of_dvd hpos hdiv) (not_le.mpr ((le_max_right a b).trans_lt hbig))
 
   -- Set up Fact that p is prime
   haveI : Fact p.Prime := ⟨hp.1⟩
@@ -203,7 +138,9 @@ theorem irrational_sqrt_2 : Irrational √2 := by
   -- In ZMod p, we have (a mod p)² = 2 * (b mod p)²
   have mod_eq : ((a : ZMod p))^2 = 2 * ((b : ZMod p))^2 := by
     have : (a^2 : ZMod p) = (2 * b^2 : ZMod p) := by
-      norm_cast
+      simp only [← Nat.cast_pow]
+      rw [hsq]
+      simp [Nat.cast_mul]
     convert this using 1
 
   -- Since p doesn't divide b, (b mod p) is a unit
@@ -244,11 +181,7 @@ theorem irrational_sqrt_2 : Irrational √2 := by
     _ = 2 := by ring
 
   -- But we proved 2 is not a square mod p for p ∈ P
-  have hp_ne_2 : p ≠ 2 := by
-    intro h
-    subst h
-    have : max (max a b) 8 < 2 := hbig
-    norm_num at this
+  have hp_ne_2 : p ≠ 2 := fun h => two_not_in_P (h ▸ hp)
 
   have not_sq : ¬IsSquare (2 : ZMod p) := h_not_square p hp hp_ne_2
 
