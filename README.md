@@ -30,17 +30,36 @@ This project demonstrates how simple mathematical facts can be proven using unne
 
 **Reference**: [MathOverflow discussion](https://mathoverflow.net/questions/42512/awfully-sophisticated-proof-for-simple-facts)
 
-### 3. Continuity of Constant Functions (`constant_one_continuous`)
-**Statement**: The constant function f(x) = 1 is continuous.
+### 3. Bounded Functions Have Antiderivatives (`bounded_has_antiderivative`)
+**Statement**: Every bounded function on [0,1] has an antiderivative.
 
 **Convoluted approach**:
-- References the Weierstrass approximation theorem
-- Mentions the Arzelà-Ascoli theorem
-- Invokes Stone-Weierstrass theorem
-- Discusses measure theory and functional analysis concepts
-- Finally uses the trivial fact that constant functions are continuous
+- Uses Carleson's theorem on pointwise convergence of Fourier series
+- Extends the function to a periodic function on ℝ
+- Considers Fourier series and term-by-term integration
+- References Littlewood-Paley theory and Hardy-Littlewood maximal function
 
-**Inspiration**: Carleson's theorem machinery
+**Reference**: Direct example from the MathOverflow thread
+
+### 4. Bounded Periodic Functions are A.E. Continuous (`bounded_periodic_ae_eq_continuous`)
+**Statement**: Every bounded 2π-periodic function ℝ → ℂ equals a continuous function almost everywhere.
+
+**Convoluted approach**:
+- Invokes Carleson's theorem and L² convergence of Fourier series
+- Uses Fejér sums and Cesàro means
+- References Calderón-Zygmund theory and singular integrals
+
+**Note**: Proof left incomplete with `sorry`
+
+### 5. Indicator Function is A.E. Continuous (`indicator_ae_continuous`)
+**Statement**: The indicator function of [0,1] equals a continuous function almost everywhere.
+
+**Convoluted approach**:
+- Uses L² theory and Fourier analysis on periodic extensions
+- Applies Carleson's theorem and Egorov's theorem
+- References Sobolev embedding theorems
+
+**Note**: This is a false statement - the "proof" is intentionally flawed!
 
 ## Building the Project
 

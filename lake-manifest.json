@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
-   "rev": "3a4270d7a287e57b27f022e41ba590e1988b13e3",
+   "rev": "2cb345fe38f9954ef54ca97809f1e304f2dcac8a",
    "name": "mathlib",
    "manifestFile": "lake-manifest.json",
    "inputRev": "master",
@@ -91,5 +91,5 @@
    "inputRev": "main",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "SqrtDirichlet",
+ "name": "ConvolutedProofs",
  "lakeDir": ".lake"}
