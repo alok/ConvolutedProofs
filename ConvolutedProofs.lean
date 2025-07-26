@@ -1,58 +1,66 @@
 import Mathlib
+
+-- Model Theory
 import Mathlib.ModelTheory.Ultraproducts
 import Mathlib.ModelTheory.Algebra.Field.Basic
 import Mathlib.ModelTheory.Algebra.Ring.Basic
+
+-- Algebra
 import Mathlib.Algebra.CharP.Defs
+
+-- Analysis
 import Mathlib.Analysis.Fourier.AddCircle
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+-- Data
 import Mathlib.Data.Real.Pi.Bounds
+
+-- Measure Theory
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open Cardinal Set Function FirstOrder.Language FirstOrder.Ring Real
 
-/-- There exists a function with a discontinuity at at least one point. Based on Asaf's proof in https://math.stackexchange.com/questions/1311228/what-is-the-most-unusual-proof-you-know-that-sqrt2-is-irrational (see comments). Uses Dirichlet's theorem to get infinite sequences to create filters.
+/-- The square root of 2 is irrational.
 
-Cruxes to make this work:
+This convoluted proof uses Dirichlet's theorem on primes in arithmetic progressions
+and quadratic reciprocity, following Asaf Karagila's approach from:
+https://math.stackexchange.com/questions/1311228/
 
-- [ ] first order formula recognition
-
----
-
-
-- [ ] setup leantool (*within* this repo for self-containedness) https://github.com/GasStationManager/LeanTool
-
-
+The key insight: if √2 were rational, then x² = 2 would have a solution in every
+field of characteristic 0. But we can use Dirichlet's theorem to find primes p
+where 2 is not a quadratic residue, leading to a contradiction.
 -/
-
 theorem irrational_sqrt_2 : Irrational √2 := by
-  -- We'll prove this using Dirichlet's theorem and ultrafilters (following Asaf Karagila)
   by_contra h
   push_neg at h
-  -- h : ¬Irrational √2, so √2 is rational
 
-  -- If √2 were rational, it would be in every field of characteristic 0
-  -- We'll construct a field of characteristic 0 that doesn't contain √2
-
-  -- First, use Dirichlet's theorem to get infinitely many primes ≡ 3 (mod 8)
+  -- ============================================================================
+  -- Step 1: Set up Dirichlet's theorem for primes ≡ 3 (mod 8)
+  -- ============================================================================
+  
   have three_unit : IsUnit (3 : ZMod 8) := by decide
-
-  -- Get the infinite set of primes ≡ 3 (mod 8)
-  -- For these primes, 2 is not a square mod p
+  
   let P := {p : ℕ | p.Prime ∧ (p : ZMod 8) = 3}
   have P_infinite : P.Infinite := Nat.setOf_prime_and_eq_mod_infinite three_unit
 
-  -- For primes p ≡ 3 (mod 8), 2 is not a square mod p
+  -- ============================================================================
+  -- Step 2: Prove that 2 is not a quadratic residue for primes p ≡ 3 (mod 8)
+  -- ============================================================================
+  
   have h_not_square : ∀ p ∈ P, p ≠ 2 → ¬IsSquare (2 : ZMod p) := by
     intro p hp hp2
     have hp_prime : p.Prime := hp.1
     haveI : Fact p.Prime := ⟨hp_prime⟩
+    
+    -- Extract that p ≡ 3 (mod 8)
     have : p % 8 = 3 := by
       have hcast : (p : ZMod 8) = 3 := hp.2
-      -- Use that (p : ZMod 8) = ZMod.val (p : ZMod 8) when p % 8 < 8
       have : ZMod.val (p : ZMod 8) = 3 := by
         rw [hcast]
         rfl
       rwa [ZMod.val_natCast] at this
+    
+    -- Apply quadratic reciprocity
     rw [ZMod.exists_sq_eq_two_iff hp2]
     push_neg
     constructor
@@ -63,30 +71,24 @@ theorem irrational_sqrt_2 : Irrational √2 := by
       rw [this] at h
       norm_num at h
 
-  -- Build a non-principal ultrafilter on P using the hyperfilter construction
-  -- The hyperfilter extends the cofinite filter and is non-principal on infinite types
+  -- ============================================================================
+  -- Step 3: Build a non-principal ultrafilter on P
+  -- ============================================================================
+  
   haveI : Infinite ↑P := P_infinite.to_subtype
   let U : Ultrafilter ↑P := @Filter.hyperfilter ↑P _
 
-  -- U is non-principal since it contains the cofinite filter
   have U_nonprincipal : ∀ p : ↑P, U ≠ pure p := by
     intro p hU
-    -- If U = pure p, then {p} ∈ U, but finite sets aren't in the hyperfilter
     have : {p} ∈ U := by rw [hU]; exact Filter.singleton_mem_pure
     exact (Set.finite_singleton _).notMem_hyperfilter this
 
-  -- Model theory setup: ultraproduct of finite fields ZMod p for p ∈ P
-  -- Key insight: If √2 ∈ ℚ, then x² = 2 has a solution in every char 0 field
-  -- But by quadratic reciprocity, x² ≡ 2 (mod p) has no solution for p ≡ 3 (mod 8)
-  -- The ultraproduct would give a char 0 field with no solution to x² = 2 (contradiction)
-
-  -- Direct approach: use that P contains arbitrarily large primes
-
-  -- First, note that 2 ∉ P since (2 : ZMod 8) = 2 ≠ 3
+  -- ============================================================================
+  -- Step 4: Extract the rational representation of √2
+  -- ============================================================================
+  
   have two_not_in_P : 2 ∉ P := by decide
-
-
-  -- For contradiction, assume √2 is rational
+  
   rw [Irrational] at h
   push_neg at h
   obtain ⟨q, hq : (q : ℝ) = √2⟩ := h
