@@ -12,54 +12,62 @@ This project demonstrates how simple mathematical facts can be proven using unne
 **Statement**: √2 is irrational.
 
 **Convoluted approach**: 
-- Uses Dirichlet's theorem on primes in arithmetic progressions
-- Constructs a non-principal ultrafilter on an infinite set of primes
-- Applies quadratic reciprocity and properties of finite fields
-- Originally intended to use model theory and ultraproducts (simplified in implementation)
+- Uses Dirichlet's theorem on primes in arithmetic progressions to get infinitely many primes ≡ 3 (mod 8)
+- Constructs a non-principal ultrafilter on this infinite set using the hyperfilter
+- Applies quadratic reciprocity to show 2 is not a square mod p for these primes
+- Derives a contradiction by showing if √2 = a/b, then 2 would be a square mod p
 
-**Reference**: Based on [Asaf Karagila's proof](https://math.stackexchange.com/questions/1311228/what-is-the-most-unusual-proof-you-know-that-sqrt2-is-irrational)
+**Reference**: Based on [Asaf Karagila's proof](https://math.stackexchange.com/questions/1311228/what-is-the-most-unusual-proof-you-know-that-sqrt2-is-irrational) (see comments)
 
-### 2. Existence of Discontinuous Functions (`discontinuous_function_exists`)
-**Statement**: There exists a function from ℝ to ℝ that is not continuous.
-
-**Convoluted approach**:
-- Uses cardinal arithmetic and cardinality arguments
-- Shows that if all functions were continuous, we'd have #(ℝ → ℝ) ≤ #(ℚ → ℝ)
-- Applies the fact that continuous functions are determined by their values on dense subsets
-- Derives a contradiction using Cantor's theorem
-
-**Reference**: [MathOverflow discussion](https://mathoverflow.net/questions/42512/awfully-sophisticated-proof-for-simple-facts)
-
-### 3. Bounded Functions Have Antiderivatives (`bounded_has_antiderivative`)
-**Statement**: Every bounded function on [0,1] has an antiderivative.
-
-**Convoluted approach**:
-- Uses Carleson's theorem on pointwise convergence of Fourier series
-- Extends the function to a periodic function on ℝ
-- Considers Fourier series and term-by-term integration
-- References Littlewood-Paley theory and Hardy-Littlewood maximal function
-
-**Reference**: Direct example from the MathOverflow thread
-
-### 4. Bounded Periodic Functions are A.E. Continuous (`bounded_periodic_ae_eq_continuous`)
+### 2. Bounded Periodic Functions are A.E. Continuous (`bounded_periodic_ae_eq_continuous`)
 **Statement**: Every bounded 2π-periodic function ℝ → ℂ equals a continuous function almost everywhere.
 
 **Convoluted approach**:
-- Invokes Carleson's theorem and L² convergence of Fourier series
-- Uses Fejér sums and Cesàro means
-- References Calderón-Zygmund theory and singular integrals
+- Works on the circle T = ℝ/(2πℤ) with Haar measure
+- Invokes Carleson's theorem (1966) on pointwise convergence of Fourier series
+- Uses Fejér sums (Cesàro means) and their uniform convergence
+- References Calderón-Zygmund theory, singular integrals, and the Hilbert transform
+- Mentions Hardy-Littlewood maximal theorem
 
 **Note**: Proof left incomplete with `sorry`
 
-### 5. Indicator Function is A.E. Continuous (`indicator_ae_continuous`)
+### 3. Indicator Function is A.E. Continuous (`indicator_ae_continuous`)
 **Statement**: The indicator function of [0,1] equals a continuous function almost everywhere.
 
 **Convoluted approach**:
-- Uses L² theory and Fourier analysis on periodic extensions
-- Applies Carleson's theorem and Egorov's theorem
-- References Sobolev embedding theorems
+- Extends indicator to a 2-periodic function and computes Fourier coefficients
+- Applies Carleson's theorem for pointwise convergence
+- Uses Fejér sums (continuous trigonometric polynomials)
+- Invokes Egorov's theorem to upgrade a.e. convergence
+- References distribution theory, Sobolev embeddings, and BV functions
 
-**Note**: This is a false statement - the "proof" is intentionally flawed!
+**Note**: This is a false statement - the "proof" is intentionally flawed! Indicator functions are not a.e. equal to continuous functions.
+
+### 4. Bounded Functions Have Antiderivatives (`bounded_has_antiderivative`)
+**Statement**: Every bounded function on [0,1] has an antiderivative.
+
+**Convoluted approach**:
+- Extends function periodically and considers its Fourier series
+- Uses Carleson's theorem for pointwise convergence a.e.
+- Constructs antiderivative by formally integrating Fourier series term by term
+- Applies uniform convergence to show differentiability
+- References Paley-Wiener theorems, Littlewood-Paley theory, and Calderón-Zygmund decomposition
+
+**Reference**: Direct example from the MathOverflow thread - using Carleson's theorem to prove Riemann integrability
+
+**Note**: Proof incomplete with `sorry`
+
+### 5. Existence of Discontinuous Functions (`discontinuous_function_exists`)
+**Statement**: There exists a function from ℝ to ℝ that is not continuous.
+
+**Convoluted approach**:
+- Proof by contradiction assuming all functions are continuous
+- Uses cardinal arithmetic: if all functions were continuous, then #(ℝ → ℝ) ≤ #(ℚ → ℝ)
+- Applies density of ℚ in ℝ and that continuous functions are determined by values on dense subsets
+- Shows this implies 𝔠^𝔠 ≤ 𝔠^ℵ₀ = 𝔠
+- Derives contradiction using Cantor's theorem: 𝔠 < 𝔠^𝔠
+
+**Reference**: [MathOverflow discussion](https://mathoverflow.net/questions/42512/awfully-sophisticated-proof-for-simple-facts)
 
 ## Building the Project
 
