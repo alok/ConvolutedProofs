@@ -1,8 +1,11 @@
-name = "SqrtDirichlet"
+name = "ConvolutedProofs"
 version = "0.1.0"
-keywords = ["math"]
-defaultTargets = ["SqrtDirichlet"]
+keywords = ["math", "proof", "lean4", "formalization", "ultrafilters", "dirichlet", "carleson"]
+defaultTargets = ["ConvolutedProofs"]
 authors = ["Alok Singh"]
+license = "Apache-2.0"
+homepage = "https://github.com/alokbeniwal/ConvolutedProofs"
+description = "Absurdly sophisticated proofs of simple mathematical facts in Lean 4"
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -15,4 +18,4 @@ name = "mathlib"
 scope = "leanprover-community"
 
 [[lean_lib]]
-name = "SqrtDirichlet"
+name = "ConvolutedProofs"
