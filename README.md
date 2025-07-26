@@ -19,45 +19,7 @@ This project demonstrates how simple mathematical facts can be proven using unne
 
 **Reference**: Based on [Asaf Karagila's proof](https://math.stackexchange.com/questions/1311228/what-is-the-most-unusual-proof-you-know-that-sqrt2-is-irrational) (see comments)
 
-### 2. Bounded Periodic Functions are A.E. Continuous (`bounded_periodic_ae_eq_continuous`)
-**Statement**: Every bounded 2π-periodic function ℝ → ℂ equals a continuous function almost everywhere.
-
-**Convoluted approach**:
-- Works on the circle T = ℝ/(2πℤ) with Haar measure
-- Invokes Carleson's theorem (1966) on pointwise convergence of Fourier series
-- Uses Fejér sums (Cesàro means) and their uniform convergence
-- References Calderón-Zygmund theory, singular integrals, and the Hilbert transform
-- Mentions Hardy-Littlewood maximal theorem
-
-**Note**: Proof left incomplete with `sorry`
-
-### 3. Indicator Function is A.E. Continuous (`indicator_ae_continuous`)
-**Statement**: The indicator function of [0,1] equals a continuous function almost everywhere.
-
-**Convoluted approach**:
-- Extends indicator to a 2-periodic function and computes Fourier coefficients
-- Applies Carleson's theorem for pointwise convergence
-- Uses Fejér sums (continuous trigonometric polynomials)
-- Invokes Egorov's theorem to upgrade a.e. convergence
-- References distribution theory, Sobolev embeddings, and BV functions
-
-**Note**: This is a false statement - the "proof" is intentionally flawed! Indicator functions are not a.e. equal to continuous functions.
-
-### 4. Bounded Functions Have Antiderivatives (`bounded_has_antiderivative`)
-**Statement**: Every bounded function on [0,1] has an antiderivative.
-
-**Convoluted approach**:
-- Extends function periodically and considers its Fourier series
-- Uses Carleson's theorem for pointwise convergence a.e.
-- Constructs antiderivative by formally integrating Fourier series term by term
-- Applies uniform convergence to show differentiability
-- References Paley-Wiener theorems, Littlewood-Paley theory, and Calderón-Zygmund decomposition
-
-**Reference**: Direct example from the MathOverflow thread - using Carleson's theorem to prove Riemann integrability
-
-**Note**: Proof incomplete with `sorry`
-
-### 5. Existence of Discontinuous Functions (`discontinuous_function_exists`)
+### 2. Existence of Discontinuous Functions (`discontinuous_function_exists`)
 **Statement**: There exists a function from ℝ to ℝ that is not continuous.
 
 **Convoluted approach**:
@@ -83,7 +45,7 @@ The project showcases how advanced mathematical concepts can be (mis)used to pro
 - **Number Theory**: Dirichlet's theorem, quadratic reciprocity
 - **Set Theory**: Cardinal arithmetic, Cantor's theorem
 - **Topology**: Density arguments, Baire category theorem
-- **Functional Analysis**: Approximation theorems, measure theory
+- **Functional Analysis**: Measure theory, density arguments
 
 ## Contributing
 
