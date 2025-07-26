@@ -19,6 +19,83 @@ Cruxes to make this work:
 -/
 
 theorem irrational_sqrt_2 : Irrational √2 := by
+  -- We'll prove this using Dirichlet's theorem and ultrafilters (following Asaf Karagila)
+  by_contra h
+  push_neg at h
+  -- h : ¬Irrational √2, so √2 is rational
+  
+  -- If √2 were rational, it would be in every field of characteristic 0
+  -- We'll construct a field of characteristic 0 that doesn't contain √2
+  
+  -- First, use Dirichlet's theorem to get infinitely many primes ≡ 3 (mod 8)
+  have three_unit : IsUnit (3 : ZMod 8) := by
+    rw [isUnit_iff_exists_inv]
+    use 3
+    norm_num
+  
+  -- Get the infinite set of primes ≡ 3 (mod 8)
+  -- For these primes, 2 is not a square mod p
+  let P := {p : ℕ | p.Prime ∧ (p : ZMod 8) = 3}
+  have P_infinite : P.Infinite := Nat.setOf_prime_and_eq_mod_infinite three_unit
+  
+  -- For primes p ≡ 3 (mod 8), 2 is not a square mod p
+  have h_not_square : ∀ p ∈ P, p ≠ 2 → ¬IsSquare (2 : ZMod p) := by
+    intro p hp hp2
+    have hp_prime : p.Prime := hp.1
+    haveI : Fact p.Prime := ⟨hp_prime⟩
+    have : p % 8 = 3 := by
+      have : (p : ZMod 8) = 3 := hp.2
+      have h_mod : p ≡ 3 [MOD 8] := by
+        rw [Nat.ModEq.comm, Nat.ModEq]
+        simp [this]
+      exact h_mod.eq_mod_of_lt (by norm_num : 3 < 8)
+    rw [ZMod.exists_sq_eq_two_iff hp2]
+    push_neg
+    constructor
+    · norm_num
+    · omega
+  
+  -- Build an ultrafilter on P
+  -- Since P is infinite, we can find a free ultrafilter
+  have P_nonempty : P.Nonempty := by
+    -- 3 itself is in P
+    use 3
+    constructor
+    · exact Nat.prime_three
+    · norm_num
+  
+  -- Now we need to construct an ultrafilter on P
+  -- Since we're using choice, we can just assert existence
+  
+  -- First, let's index our primes
+  let ι := P
+  -- For each prime p in P, we have the finite field ZMod p
+  let M : ι → Type := fun p => ZMod p.val
+  
+  -- We need a non-principal ultrafilter on ι
+  -- This exists because P is infinite
+  have : ∃ U : Ultrafilter ι, ∀ s : Set ι, s.Finite → s ∉ U := by
+    -- This follows from P being infinite and the ultrafilter lemma
+    sorry -- This requires some technical work with filters
+  
+  obtain ⟨U, hU⟩ := this
+  
+  -- The ultraproduct ∏_{p ∈ P} (ZMod p) / U
+  let F := Filter.Product U M
+  
+  -- By Łoś's theorem, F is a field
+  -- Moreover, F has characteristic 0 because for any n > 0,
+  -- the set {p ∈ P : characteristic of ZMod p > n} contains all but finitely many primes
+  -- so it's in U
+  
+  -- Key fact: In F, the equation x² = 2 has no solution
+  -- This is because for each p ∈ P, x² = 2 has no solution in ZMod p
+  -- By Łoś's theorem, x² = 2 has no solution in F
+  
+  -- But if √2 were rational, then √2 would exist in every field of characteristic 0
+  -- This contradicts the fact that F is a field of characteristic 0 without √2
+  
+  -- The formal contradiction requires setting up the model theory properly
   sorry
 
 /--There exists a discontinuous function.
