@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "lean-tools": {
+      "command": "node",
+      "args": ["/Users/alokbeniwal/SqrtDirichlet/.mcp/server.js"],
+      "env": {}
+    }
+  }
+}
